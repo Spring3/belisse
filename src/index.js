@@ -8,7 +8,6 @@ import { addLocaleData } from 'react-intl';
 
 import initStore from './store.js';
 import App from './App.jsx';
-import TestView from './views/test.view.jsx';
 import IntlProvider from './components/IntlProvider.jsx';
 
 const history = createHistory();
@@ -20,7 +19,6 @@ ReactDOM.render(
       <ConnectedRouter history={history}>
         <Switch>
           <Route exact path='/' component={App} />
-          <Route path='/test' component={TestView} />
         </Switch>
       </ConnectedRouter>
     </IntlProvider>
