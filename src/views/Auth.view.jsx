@@ -8,16 +8,6 @@ export default class AuthenticationView extends Component {
     <Form
       orientation="vertical"
     >
-      <Input
-        key={0}
-        type="email"
-        placeholder="Email"
-      />
-      <Input
-        key={1}
-        type="email"
-        placeholder="Email"
-      />
     </Form>
     );    
   }
