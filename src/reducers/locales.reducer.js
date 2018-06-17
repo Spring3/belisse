@@ -1,7 +1,9 @@
+import { remote } from 'electron';
 import en from '../locale/en.json';
 import fr from '../locale/fr.json';
 
-const defaultLocale = 'en';
+// taken from main process
+const defaultLocale = remote.app.getLocale().split('/')[0]; // in case en-US, fallback to en
 
 const supportedLocales = {
   en, fr

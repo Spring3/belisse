@@ -1,4 +1,4 @@
-import react, { PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 class Button extends PureComponent {
@@ -21,7 +21,7 @@ class Button extends PureComponent {
 
 Button.propTypes = {
   type: PropTypes.oneOf(['submit', 'button']),
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   onClick: PropTypes.func,
   className: PropTypes.string,
   disabled: PropTypes.bool,

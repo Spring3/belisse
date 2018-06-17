@@ -8,7 +8,7 @@ import { addLocaleData } from 'react-intl';
 import initStore from './store.js';
 import './App.css';
 import App from './App.jsx';
-import IntlProvider from './components/IntlProvider.jsx';
+import IntlProvider from './components/intl/IntlProvider.jsx';
 
 const history = createHistory();
 const store = initStore(history);
