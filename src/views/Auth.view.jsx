@@ -4,15 +4,21 @@ import Form from '../components/common/Form.jsx';
 import Input from '../components/common/Input.jsx';
 import Button from '../components/common/Button.jsx';
 
+import storage from '../storage.js';
 import GithubIcon from 'mdi-react/GithubCircleIcon';
 
 export default class AuthenticationView extends PureComponent {
 
   onClick = () => {
-    const server = remote.process.env.SERVER_ORIGIN;
-    const githubAuthUrl = `${server}/auth/gh`;
-    const ghAuthWindow = window.open(githubAuthUrl, 'Github Authorization');
-    window.addEventListener('message', (event) => { console.log(event.origin); console.log(event.data) })
+    // TODO: initialize redux store with these and bind react-router to this as authorized: true
+    // Som if authorized - do not display this page
+    if (!storage.has('token') || !storage.has('appId')) {
+      const server = remote.process.env.SERVER_ORIGIN;
+      const githubAuthUrl = `${server}/auth/gh`;
+      const ghAuthWindow = window.open(githubAuthUrl, 'Github Authorization');
+    } else {
+      alert(JSON.stringify({ token: storage.get('token'), appId: storage.get('appId') })) ;
+    }
   }
 
   render() {

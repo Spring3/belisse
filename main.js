@@ -3,15 +3,24 @@
 // Import parts of electron to use
 const { app, ipcMain, BrowserWindow } = require('electron');
 const assert = require('assert');
-const path = require('path');
+const path = require('path').posix;
 const url = require('url');
+const fs = require('fs');
+const crypto = require('crypto');
 require('dotenv').load({ silent: true });
 
+const storage = require('./src/storage.js');
 const windowManager = require('./src-main/windows/index.js');
 const sendTokenRequest = require('./src-main/requests/get-token.js');
 
 assert(process.env.GH_CALLBACK_URL, '[env] Github callback url is undefined');
 assert(process.env.SERVER_ORIGIN, '[env] Server origin url is undefined');
+
+if (!process.env.ENCRYPTION_KEY) {
+  const key = crypto.randomBytes(32).toString('hex');
+  fs.appendFileSync(path.resolve(__dirname, './.env'), `ENCRYPTION_KEY=${key}`);
+  require('dotenv').load({ silent: true });
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -79,12 +88,11 @@ function createWindow() {
         response
           .then(sendTokenRequest)
           .then((response) => {
-            const clientId = response.headers.client;
-            const accessToken = response.headers.token;
-            const profile = response.body;
-            console.log(clientId);
-            console.log(accessToken);
-            console.log(profile);
+            if (!storage.has('appId')) {
+              storage.set('appId', response.headers.application);
+            };
+            storage.set('token', response.headers.token);
+            storage.set('profile', response.body);
           });
         break;
       default:

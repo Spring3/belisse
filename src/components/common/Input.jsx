@@ -80,7 +80,8 @@ class Input extends PureComponent {
         autoFocus={this.props.autoFocus}
         autoComplete={this.props.autoComplete}
         checked={this.props.checked}
-        onChange={this.props.pickChangeEventHandler}
+        value={this.props.value}
+        onChange={this.pickChangeEventHandler}
       />,
       this.props.label ? this.renderLabel() : null
     ];

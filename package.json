@@ -1,6 +1,6 @@
 {
   "name": "basic-react-redux-electron-tailwindcss",
-  "productName": "My App",
+  "productName": "Belisse",
   "version": "0.1.1",
   "private": true,
   "main": "main.js",
@@ -26,6 +26,7 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
+    "react-select": "^1.2.1",
     "redux": "^3.7.2",
     "request": "^2.87.0",
     "request-promise-native": "^1.0.5"

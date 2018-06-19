@@ -11,11 +11,10 @@ function open(parent, options) {
     titleBarStyle: 'default',
   });
   const authWindow = new BrowserWindow(config);
+  authWindow.webContents.openDevTools({ mode: 'detached' });
   const responsePromise = new Promise((resolve) => {
     authWindow.webContents.on('did-get-redirect-request', (event, oldURL, newURL, isMainFrame, httpResponseCode, requestMethod, referrer, headers) => {
-      console.log(newURL);
-      console.log(process.env.GH_CALLBACK_URL);
-      if (newURL.includes(process.env.GH_CALLBACK_URL)) {
+      if (newURL.includes(`${process.env.GH_CALLBACK_URL}?code=`)) {
         authWindow.close();
         authWindow.destroy();
         const code = url.parse(newURL).query;
