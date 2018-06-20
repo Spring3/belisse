@@ -91,7 +91,7 @@ function createWindow() {
             if (!storage.has('appId')) {
               storage.set('appId', response.headers.application);
             };
-            storage.set('token', response.headers.token);
+            storage.set('token', response.headers.authorization);
             storage.set('profile', response.body);
           });
         break;
