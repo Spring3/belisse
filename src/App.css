@@ -1,8 +1,23 @@
+html, body, #root {
+  height: 100%;
+}
+
 @tailwind preflight;
 
 @tailwind utilities;
 
-.test {
-  font-weight: bold;
-  @apply .text-red .bg-black;
+.btn-gh {
+  @apply .bg-github .text-white .p-3 .rounded;
+}
+
+.btn-gh > div {
+  @apply .flex .flex-row .items-center;
+}
+
+.btn-gh > div > span {
+  @apply .ml-2 .font-semibold .text-sm;
+}
+
+html {
+  -webkit-app-region: drag;
 }

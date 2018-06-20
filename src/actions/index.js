@@ -1,5 +1,1 @@
-import changeLocale from './changeLocale.action.js';
-
-export default ({
-  changeLocale
-});
+export const changeLocale = locale => ({ type: 'CHANGE_LOCALE', locale });

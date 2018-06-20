@@ -1,9 +1,26 @@
 'use strict';
 
 // Import parts of electron to use
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+const { app, ipcMain, BrowserWindow } = require('electron');
+const assert = require('assert');
+const path = require('path').posix;
 const url = require('url');
+const fs = require('fs');
+const crypto = require('crypto');
+require('dotenv').load({ silent: true });
+
+const storage = require('./src/storage.js');
+const windowManager = require('./src-main/windows/index.js');
+const sendTokenRequest = require('./src-main/requests/get-token.js');
+
+assert(process.env.GH_CALLBACK_URL, '[env] Github callback url is undefined');
+assert(process.env.SERVER_ORIGIN, '[env] Server origin url is undefined');
+
+if (!process.env.ENCRYPTION_KEY) {
+  const key = crypto.randomBytes(32).toString('hex');
+  fs.appendFileSync(path.resolve(__dirname, './.env'), `ENCRYPTION_KEY=${key}`);
+  require('dotenv').load({ silent: true });
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -18,7 +35,13 @@ if ( process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) 
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1024, height: 768, show: false
+    width: 1024,
+    height: 768,
+    show: false,
+    titleBarStyle: 'hiddenInset',
+    webPreferences: {
+      nativeWindowOpen: true
+    }
   });
 
   // and load the index.html of the app.
@@ -54,6 +77,27 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+  });
+
+  mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+    switch(frameName) {
+      case 'Github Authorization':
+        event.preventDefault();
+        const { browserWindow, response } = windowManager.windows.GITHUB_AUTH.open(mainWindow, options);
+        event.newGuest = browserWindow;
+        response
+          .then(sendTokenRequest)
+          .then((response) => {
+            if (!storage.has('appId')) {
+              storage.set('appId', response.headers.application);
+            };
+            storage.set('token', response.headers.token);
+            storage.set('profile', response.body);
+          });
+        break;
+      default:
+        return;
+    }
   });
 }
 
